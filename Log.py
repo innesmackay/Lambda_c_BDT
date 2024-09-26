@@ -9,7 +9,7 @@ def general(message, type, script):
     elif type == "warning": print(f"\033[93m{preset}WARNING {message} \033[0m")
     elif type == "error": print(f"\033[91m{preset}ERROR {message} \033[0m")
     elif type == "success": print(f"\033[92m{preset}SUCCESS {message} \033[0m")
-    elif type == "debug": print(f"\033[35m\e[1m{preset}INFO {message} \e[0m\033[0m")
+    elif type == "debug": print(f"\033[35m{preset}DEBUG {message} \033[0m")
     else: print(f"\033[91m{preset}ERROR Message type does not exist \033[0m")
 
 def info(message, script=""):

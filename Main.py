@@ -99,7 +99,7 @@ training.MakeROC()
 training.Importance()
 training.CompareVariables()
 training.MakeCorrelationMatrix()
-
+training.PersistModel()
 
 # ==============================
 # Apply to data

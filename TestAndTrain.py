@@ -240,7 +240,9 @@ class TestAndTrain:
         params = {'n_estimators': [2, 5, 10, 15, 20, 30, 50, 75, 100, 150], 'learning_rate': [0.05, 0.1, 0.2, 0.5, 1.0, 2.], 'max_depth': [2, 3, 4, 5, 6, 7, 8]}
         ml_alg = Pipeline(
             [
-                ("transform", StandardScaler()),
+                ("transformer", TransformTheColumns(new_variables=self.train_vars, verbose=False)),
+                ("imputer", SimpleImputer(strategy="median")), # Replace NaN with median
+                ("scaler", StandardScaler()),
                 ("grid_search", GridSearchCV(GradientBoostingClassifier(),
                                              param_grid=params,
                                              refit=False,

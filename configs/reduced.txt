@@ -18,3 +18,5 @@ n_estimators 150
 learning_rate 0.05
 
 test_outfile test.root
+
+model_file output/reduced/model.pkl

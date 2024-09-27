@@ -63,7 +63,7 @@ class TestAndTrain:
         ml_alg = Pipeline(
             steps=[
                 ("transformer", TransformTheColumns(new_variables=self.train_vars, verbose=False)),
-                ("imputer", SimpleImputer(strategy="median")),
+                ("imputer", SimpleImputer(strategy="median")), # Replace NaN with median
                 ("scaler", StandardScaler()),
                 ("classifier", GradientBoostingClassifier(max_depth=depth, n_estimators=n_est, learning_rate=lr)),
             ]
@@ -224,6 +224,9 @@ class TestAndTrain:
         return
 
     def PersistModel(self):
+        """
+        Persist (save) the model to a pickle file.
+        """
         warning("Reminder: be careful when applying this with different versions of scikit-learn!")
         with open(self.config.GetS("model_file"), "wb") as f:
             dump(self.alg, f, protocol=5)

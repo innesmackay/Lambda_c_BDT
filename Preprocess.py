@@ -5,8 +5,24 @@ import numpy as np
 
 
 class TransformTheColumns(BaseEstimator, TransformerMixin):
-
+    """
+    Class for transforming the columns in data. Included in
+    a scikit-learn pipeline. Used for combining raw variables.
+    General idea:
+       1. Supply list of new variables names (which are defined
+          in ```self.definitions```
+       2. Parse the definition using ```parse_transformation```
+          which returns some variables, and a string
+          identifying how they should be combined.
+       3. Make a new dataframe with transformed variables
+          in ```transform```
+    """
     def __init__(self, new_variables, verbose=True, dropna=False):
+        """
+        :param new_variables: list of transformed variable names
+        :param verbose: verbosity boolean
+        :param dropna: should rows with NaN be dropped from df?
+        """
         self.dropna = dropna
         self.verbose = verbose
         self.new_variables = new_variables
@@ -35,6 +51,9 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
 
 
     def fit(self, X, y = None):
+        """
+        Necessary function for scikit-learn pipeline.
+        """
         return self
 
 
@@ -44,14 +63,12 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
         from combinations of "raw" variables to
         reduce the number of dimensions. The
         combinations are defined in
-        configs/training/definitions.txt. This function
+        ```self.definitions```. This function
         parses the string definition such that the
         dataframe can be manipulated.
 
         :param definition: string definition of combined
         variable
-        :param verbose: verbosity boolean
-
         :returns toCombine: variables to combine
         :returns transType: key to how they will be
         combined
@@ -91,17 +108,11 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
 
     def transform(self, X):
         """
-        Reduce the number of dimensions in the training
-        variables by applying transformations. The transformations
-        are defined in configs/training/definitions.txt and
-        parsed by the ```parse_transformation``` function.
-
-        :param init_df: pandas dataframe to be transformed
-        :param training_cols: list of transformed variable names
-        :param dropna: drop rows with NaN values
-
-        :returns new_df: transformed frame
-        :returns df: old dataframe (with dropped NaN)
+        Transform the dataframe to reduce the number of
+        dimensions in the training variables by combining them
+        to form new variables.
+        :param X: pandas dataframe with raw variables
+        :returns new_df: pandas dataframe with transformed variables
         """
         new_df = pd.DataFrame()
         for col in self.new_variables:

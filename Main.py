@@ -94,7 +94,7 @@ success("Training done!")
 # ==============================
 # Look at metrics
 # ==============================
-# training.BinaryKFoldValidation()
+# training.BinaryKFoldValidation() # Takes too long and doesn't provide much info
 training.MakeROC()
 training.Importance()
 training.CompareVariables()

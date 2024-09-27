@@ -60,3 +60,24 @@ def LoadNFiles(columns, n=2, cut=None, verbose=False):
     return data
 
 
+def LoadFileN(columns, n=2, cut=None, verbose=False):
+    """
+    Load the Nth data files from the CERN server into a
+    pandas dataframe.
+    :param columns: columns to read.
+    :param cut: query string to apply.
+    :param verbose: verbosity boolean
+    """
+    if verbose:
+        info("Loading in {} files from eos and applying {} cut".format(n, cut))
+    files = [
+        f"root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/PID_TURBOONLY_TUPLE.ROOT/00232503/0000/00232503_{i:08}_1.pid_turboonly_tuple.root"
+        for i in range(1,500)
+    ]
+
+    data_root = uproot.open("{}:LcToPKPi/DecayTree".format(files[n]))
+    data = data_root.arrays(columns, cut=cut, library="pd")
+
+    return data
+
+

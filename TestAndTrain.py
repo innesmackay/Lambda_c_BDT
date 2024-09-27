@@ -1,3 +1,4 @@
+from Preprocess import TransformTheColumns
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,24 +9,28 @@ from sklearn.model_selection import cross_val_score, cross_val_predict
 from sklearn.utils.class_weight import compute_sample_weight
 from Utilities import CheckDir
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn.pipeline import Pipeline
-from Log import info, success
+from sklearn.pipeline import Pipeline, FunctionTransformer, FeatureUnion
+from Log import info, success, debug, warning
 from pickle import dump
+from sklearn.impute import SimpleImputer
 
 class TestAndTrain:
 
     def __init__(self, config, dataset, training_variables, verbose=False):
         """
         :param config: Settings class
-        :param dataset: training dataset with transformed columns
-        :param training_variables: list of variables used in training
+        :param dataset: training dataset
+        :param training_variables: list of transformed variables used in training
         """
         self.config = config
         self.train_vars = training_variables
         self.dataset = dataset
-        self.train = dataset[training_variables]
+        self.train = dataset.drop(["signal"], axis=1)
         self.target = dataset["signal"]
         self.verbose = verbose
+
+        tfr = TransformTheColumns(new_variables=self.train_vars + ["signal"], verbose=True)
+        self.transformed_df = tfr.transform(self.dataset)
 
         self.output_folder = config.GetS("output_folder")
         CheckDir("output/{}".format(self.output_folder))
@@ -52,10 +57,14 @@ class TestAndTrain:
             weights = compute_sample_weight(class_weight="balanced", y=target_train)
             info("Background and signal weights are {}".format(np.unique(weights)))
 
+        # todrop = DropFeatureSelector(variables=["Lc_BPVDIRA"])
+
         # Scale the variables and run training
         ml_alg = Pipeline(
-            [
-                ("transform", StandardScaler()),
+            steps=[
+                ("transformer", TransformTheColumns(new_variables=self.train_vars, verbose=False)),
+                ("imputer", SimpleImputer(strategy="median")), # Replace NaN with median
+                ("scaler", StandardScaler()),
                 ("classifier", GradientBoostingClassifier(max_depth=depth, n_estimators=n_est, learning_rate=lr)),
             ]
         )
@@ -78,13 +87,13 @@ class TestAndTrain:
         fscore = f1_score(self.target, scores)
         confusion = confusion_matrix(self.target, scores)
 
-        self.summary.write("precision {}".format(precision))
-        self.summary.write("recall {}".format(recall))
-        self.summary.write("f1_score {}".format(fscore))
-        self.summary.write("n00 {}".format(confusion[0][0]))
-        self.summary.write("n01 {}".format(confusion[0][1]))
-        self.summary.write("n10 {}".format(confusion[1][0]))
-        self.summary.write("n11 {}".format(confusion[1][1]))
+        self.summary.write("precision {}\n".format(precision))
+        self.summary.write("recall {}\n".format(recall))
+        self.summary.write("f1_score {}\n".format(fscore))
+        self.summary.write("n00 {}\n".format(confusion[0][0]))
+        self.summary.write("n01 {}\n".format(confusion[0][1]))
+        self.summary.write("n10 {}\n".format(confusion[1][0]))
+        self.summary.write("n11 {}\n".format(confusion[1][1]))
 
         return
 
@@ -116,7 +125,7 @@ class TestAndTrain:
         """
         Write the importance of the training variables to file.
         """
-        importances = self.alg.steps[1][1].feature_importances_
+        importances = self.alg.named_steps["classifier"].feature_importances_
         outfile = open("output/{}/importance.txt".format(self.output_folder), "w")
         for i, imp in enumerate(importances):
             outfile.write("{} {}\n".format(self.train_vars[i], imp))
@@ -138,10 +147,8 @@ class TestAndTrain:
                 max = b_max
             return (min, max)
 
-        total = self.train
-        total["signal"] = self.target
-        bkg_sample = total.query("signal==0")
-        sig_sample = total.query("signal==1")
+        bkg_sample = self.transformed_df.query("signal==0")
+        sig_sample = self.transformed_df.query("signal==1")
         for var in self.train_vars:
             fig, ax = plt.subplots(figsize=(6,4))
             plt_range = GetRange(sig_sample[var], bkg_sample[var])
@@ -161,15 +168,11 @@ class TestAndTrain:
         signal and background.
         """
         samples = {}
-        total = self.train
-        total["signal"] = self.target
-        samples["bkg"] = total.query("signal==0").drop("signal", axis=1)
-        samples["sig"] = total.query("signal==1").drop("signal", axis=1)
-
+        samples["bkg"] = self.transformed_df.query("signal==0").drop("signal", axis=1)
+        samples["sig"] = self.transformed_df.query("signal==1").drop("signal", axis=1)
         for sample in samples.keys():
             correlation_matrix = samples[sample].corr()
             fig, ax = plt.subplots(figsize=(8,6))
-            #ax.matshow(correlation_matrix)
             sns.heatmap(correlation_matrix,
                 cmap=sns.diverging_palette(220, 10, as_cmap=True),
                 vmin=-1.0, vmax=1.0,
@@ -186,7 +189,7 @@ class TestAndTrain:
         Apply the algorithm to data sample and return the signal scores.
         :param input: input data (pandas dataframe) with transformed variables
         """
-        data_probs = self.alg.predict_proba(input[self.train_vars])
+        data_probs = self.alg.predict_proba(input)
         return data_probs[:,1]
 
 
@@ -221,6 +224,9 @@ class TestAndTrain:
         return
 
     def PersistModel(self):
+        """
+        Persist (save) the model to a pickle file.
+        """
         warning("Reminder: be careful when applying this with different versions of scikit-learn!")
         with open(self.config.GetS("model_file"), "wb") as f:
             dump(self.alg, f, protocol=5)

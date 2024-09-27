@@ -46,7 +46,9 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
             "log_p_MINIPCHI2" : "log(p_MINIPCHI2)",
             "log_K_MINIPCHI2" : "log(K_MINIPCHI2)",
             "log_pi_MINIPCHI2" : "log(pi_MINIPCHI2)",
-            "lgsm_DOCACHI2" : "lgsm(Lc_DOCACHI2_12*Lc_DOCACHI2_13*Lc_DOCACHI2_23)"
+            "lgsm_DOCACHI2" : "lgsm(Lc_DOCACHI2_12*Lc_DOCACHI2_13*Lc_DOCACHI2_23)",
+            "asym_K_pi_MINIPCHI2": "asym(K_MINIPCHI2,pi_MINIPCHI2)",
+            "lgnm_Lc_BPVDIRA": "lgnm(Lc_BPVDIRA,1e-6)"
         }
 
 
@@ -93,10 +95,14 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
             strippedDef = definition[5:len(definition)-1] # X,Y
             toCombine = strippedDef.split(",")
             transType = "asym"
-        elif "lgsm" in definition: # e.g. log(X+Y+Z)
+        elif "lgsm" in definition: # e.g. lgsm(X+Y+Z)
             strippedDef = definition[5:len(definition)-1] # X+Y+Z
             toCombine = strippedDef.split("*")
             transType = "logsum"
+        elif "lgnm" in definition: # e.g. lgnm(X,2)
+            strippedDef = definition[5:len(definition)-1] # X,2
+            toCombine = strippedDef.split(",")
+            transType = "lognorm"
         else:
             error("Couldn't parse definition")
 
@@ -132,6 +138,8 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
                     new_df[col] = (X[varsToCombine[0]] - X[varsToCombine[1]]) / (X[varsToCombine[0]] + X[varsToCombine[1]])
                 elif howToCombine == "logsum":
                     new_df[col] = np.log10( X[varsToCombine].sum(axis=1) )
+                elif howToCombine == "lognorm":
+                    new_df[col] = np.log10( X[varsToCombine[0]] ) / float(varsToCombine[1])
             else:
                 if self.verbose:
                     info("No definition for {}, using raw variable".format(col))

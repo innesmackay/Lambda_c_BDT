@@ -80,7 +80,7 @@ for i in range(args.nfiles):
     if verbose:
         info("Getting BDT scores for file {}".format(i))
 
-    all_data = LoadFileN(all_data_cols, n=i, cut=ParseCut(config.GetS("data_cut")), verbose=verbose)
+    all_data = LoadFileN(all_data_cols, n=i, cut=ParseCut(config.GetS("data_cut")))
     data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
 
     data_probs = alg.predict_proba(data)

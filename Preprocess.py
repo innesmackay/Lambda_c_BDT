@@ -28,6 +28,8 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
             "asym_p_K_PT" : "asym(p_PT,K_PT)",
             "log_Lc_BPVFDCHI2" : "log(Lc_BPVFDCHI2)",
             "log_p_MINIPCHI2" : "log(p_MINIPCHI2)",
+            "log_K_MINIPCHI2" : "log(K_MINIPCHI2)",
+            "log_pi_MINIPCHI2" : "log(pi_MINIPCHI2)",
             "lgsm_DOCACHI2" : "lgsm(Lc_DOCACHI2_12*Lc_DOCACHI2_13*Lc_DOCACHI2_23)"
         }
 

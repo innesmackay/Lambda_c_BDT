@@ -49,15 +49,13 @@ class TestAndTrain:
         """
 
         # Divide the sample
-        data_train, data_test, target_train, target_test = train_test_split(self.train, self.target, test_size=0.75, random_state=16)
+        data_train, data_test, target_train, target_test = train_test_split(self.train, self.target, test_size=0.25, random_state=16)
 
         # Weight the sample
         weights = None
         if weight:
             weights = compute_sample_weight(class_weight="balanced", y=target_train)
             info("Background and signal weights are {}".format(np.unique(weights)))
-
-        # todrop = DropFeatureSelector(variables=["Lc_BPVDIRA"])
 
         # Scale the variables and run training
         ml_alg = Pipeline(
@@ -70,6 +68,8 @@ class TestAndTrain:
         )
         ml_alg.fit(data_train, target_train, **{"classifier__sample_weight":weights})
         self.alg = ml_alg
+
+        self.ResponsePlot(data_train, data_test, target_train, target_test, weights=weights)
 
         return
 
@@ -94,6 +94,42 @@ class TestAndTrain:
         self.summary.write("n01 {}\n".format(confusion[0][1]))
         self.summary.write("n10 {}\n".format(confusion[1][0]))
         self.summary.write("n11 {}\n".format(confusion[1][1]))
+
+        return
+
+    def ResponsePlot(self, data_train, data_test, target_train, target_test, weights=None):
+
+        train_response = self.alg.predict_proba(data_train)
+        data_train["score"] = train_response[:,1]
+        data_train["signal"] = target_train
+        sig_train = data_train.query("signal==1")
+        bkg_train = data_train.query("signal==0")
+
+        test_response = self.alg.predict_proba(data_test)
+        data_test["score"] = test_response[:,1]
+        data_test["signal"] = target_test
+        sig_test = data_test.query("signal==1")
+        bkg_test = data_test.query("signal==0")
+
+        bkg_weight = None
+        sig_weight = None
+        if weights is not None:
+            bkg_weight = np.amin(np.unique(weights))
+            sig_weight = np.amax(np.unique(weights))
+
+        n_sig_test, bin_edges = np.histogram(sig_test["score"], bins=20, range=(0,1), weights=np.ones(len(sig_test))*sig_weight)
+        n_bkg_test, _ = np.histogram(bkg_test["score"], bins=20, range=(0,1), weights=np.ones(len(bkg_test))*bkg_weight)
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+        fig, ax = plt.subplots(figsize=(6,4))
+        ax.hist(sig_train["score"], bins=20, range=(0,1), color="b", histtype='stepfilled', label="Signal train", alpha=0.3, weights=np.ones(len(sig_train))*(sig_weight/3))
+        ax.hist(bkg_train["score"], bins=20, range=(0,1), color="r", histtype='stepfilled', label="Bkg train", alpha=0.3, weights=np.ones(len(bkg_train))*(bkg_weight)/3)
+        ax.plot(bin_centers, n_bkg_test, color="r", label="Bkg test", linestyle='None', marker='o', markersize=2)
+        ax.plot(bin_centers, n_sig_test, color="b", label="Signal test", linestyle='None', marker='o', markersize=2)
+        ax.legend(loc='best')
+        ax.set_xlabel("BDT response", fontsize=14)
+        ax.set_ylabel("Candidates", fontsize=14)
+        plt.savefig("output/{}/response.pdf".format(self.output_folder), bbox_inches="tight", format="pdf")
 
         return
 
@@ -157,7 +193,7 @@ class TestAndTrain:
             ax.set_xlabel(var)
             ax.set_ylabel("Normalised candidates")
             ax.legend(loc='best')
-            plt.savefig("output/{}/{}.pdf".format(self.output_folder, var))
+            plt.savefig("output/{}/{}.pdf".format(self.output_folder, var), bbox_inches="tight", format="pdf")
 
         return
 

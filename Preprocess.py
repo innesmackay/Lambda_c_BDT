@@ -107,7 +107,10 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
             error("Couldn't parse definition")
 
         if self.verbose:
-            info("Parsing {} using type {} and variables {}".format(definition, transType, " ".join(str(var) for var in toCombine)))
+            toPrint = " ".join(str(var) for var in toCombine)
+            if isinstance(toCombine, str):
+                toPrint = str(toCombine)
+            info("Parsing {} using type {} and variables {}".format(definition, transType, toPrint))
 
         return toCombine, transType
 

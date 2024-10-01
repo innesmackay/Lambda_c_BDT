@@ -1,3 +1,10 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath('../../src/bdt/apps'))
+sys.path.insert(0, os.path.abspath('../../src/bdt/utils'))
+
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -31,14 +38,5 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 html_static_path = ['_static']
-
-import sys
-import os
-
-#sys.path.insert(0, os.path.abspath('../../src/bdt/apps'))
-#sys.path.insert(0, os.path.abspath('../../'))
-#sys.path.insert(0, os.path.abspath('.'))
-#sys.path.insert(0, os.path.abspath('../../src/bdt/utils'))
-sys.path.insert(0, os.path.abspath('.'))

@@ -14,11 +14,11 @@ release = 'v1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-#extensions = [
-#    'sphinx.ext.autodoc',	     # To generate autodocs
-#    'sphinx.ext.mathjax',           # autodoc with maths
-#    'sphinx.ext.napoleon'           # For auto-doc configuration
-#]
+extensions = [
+    'sphinx.ext.autodoc',	     # To generate autodocs
+    'sphinx.ext.mathjax',           # autodoc with maths
+    'sphinx.ext.napoleon'           # For auto-doc configuration
+]
 
 #napoleon_google_docstring = False   # Turn off googledoc strings
 #napoleon_numpy_docstring = True     # Turn on numpydoc strings
@@ -34,7 +34,11 @@ exclude_patterns = []
 html_theme = 'alabaster' # sphinx_rtd_theme
 html_static_path = ['_static']
 
+import sys
+import os
 
-#sys.path.insert(0, os.path.abspath('../../src/bdt/apps'))
-#sys.path.insert(0, os.path.abspath('../../src/bdt/utils'))
+sys.path.insert(0, os.path.abspath('../../src/bdt/apps'))
+sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../../src/bdt/utils'))
 #sys.path.insert(0, os.path.abspath('.'))

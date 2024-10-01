@@ -5,6 +5,7 @@ import os
 from TextFileHandling import *
 from Log import *
 
+
 def LoadCachedData(columns, cut=None, verbose=False):
     """
     Loads cached data stored in a ".root" file into
@@ -49,13 +50,13 @@ def LoadNFiles(columns, n=2, cut=None, verbose=False):
         info("Loading in {} files from eos and applying {} cut".format(n, cut))
     files = [
         f"root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/PID_TURBOONLY_TUPLE.ROOT/00232503/0000/00232503_{i:08}_1.pid_turboonly_tuple.root"
-        for i in range(1,n)
+        for i in range(1, n)
     ]
     data = uproot.concatenate(
         ["{}:LcToPKPi/DecayTree".format(f) for f in files],
         expressions=columns,
         library="pd",
-        cut=cut
+        cut=cut,
     )
     return data
 
@@ -70,12 +71,10 @@ def LoadFileN(columns, n, cut=None):
     """
     files = [
         f"root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/PID_TURBOONLY_TUPLE.ROOT/00232503/0000/00232503_{i:08}_1.pid_turboonly_tuple.root"
-        for i in range(1,500)
+        for i in range(1, 500)
     ]
 
     data_root = uproot.open("{}:LcToPKPi/DecayTree".format(files[n]))
     data = data_root.arrays(columns, cut=cut, library="pd")
 
     return data
-
-

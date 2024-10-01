@@ -3,6 +3,8 @@ from TextFileHandling import Settings, ReadList, ParseCut
 from Data import *
 import numpy as np
 import pandas as pd
+
+pd.set_option("mode.chained_assignment", None)  # Suppress warning
 import argparse
 from root_pandas import to_root
 from Log import *
@@ -92,8 +94,8 @@ data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
 # Setup the training
 # ==============================
 # Set the target branch for training
-sideband["signal"] = np.zeros(len(sideband))
-mc["signal"] = np.ones(len(mc))
+sideband["signal"] = list(np.zeros(len(sideband)))
+mc["signal"] = list(np.ones(len(mc)))
 training_sample = pd.concat(
     [sideband[raw_training_cols + ["signal"]], mc[raw_training_cols + ["signal"]]],
     ignore_index=True,

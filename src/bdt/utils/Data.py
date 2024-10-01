@@ -1,3 +1,9 @@
+import warnings
+
+warnings.simplefilter(
+    action="ignore", category=FutureWarning
+)  # Suppress pandas FutureWarning
+
 import numpy as np
 import pandas as pd
 import uproot

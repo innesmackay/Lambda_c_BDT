@@ -1,0 +1,10 @@
+numpy
+root
+uproot
+pandas
+root_pandas
+python
+matplotlib
+scipy
+scikit-learn
+seaborn

@@ -62,7 +62,11 @@ data_cols = ReadList("configs/other_variables/{}.txt".format(config.GetS("data_v
 mc_cols = ReadList("configs/other_variables/{}.txt".format(config.GetS("mc_vars")))
 all_data_cols = data_cols + raw_training_cols
 if verbose:
-    info("Variables taken from tuple:\n{}\n".format("\n".join(str(var) for var in all_data_cols )))
+    info(
+        "Variables taken from tuple:\n{}\n".format(
+            "\n".join(str(var) for var in all_data_cols)
+        )
+    )
 
 # ==============================
 # Load the ML algorithm
@@ -84,10 +88,12 @@ for i in range(args.nfiles):
     data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
 
     data_probs = alg.predict_proba(data)
-    bdt_scores = data_probs[:,1]
+    bdt_scores = data_probs[:, 1]
 
-    if (len(data) != len(bdt_scores)):
-        error("There is not a 1:1 correspondence between the data and the transformed data")
+    if len(data) != len(bdt_scores):
+        error(
+            "There is not a 1:1 correspondence between the data and the transformed data"
+        )
         break
     else:
         data["signal_score"] = bdt_scores

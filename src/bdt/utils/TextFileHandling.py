@@ -1,13 +1,17 @@
 from Log import *
 
+
 def ReadList(filename, isFloat=False):
     """
     Read values from a file into a list.
     :param filename: name of file to be read.
     """
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         initial_vals = f.readlines()
-    vals = [ float(v.replace("\n", "")) if isFloat else str(v.replace("\n", "")) for v in initial_vals ]
+    vals = [
+        float(v.replace("\n", "")) if isFloat else str(v.replace("\n", ""))
+        for v in initial_vals
+    ]
     return vals
 
 
@@ -36,6 +40,7 @@ class Settings:
     with a '*' character it will not be read (use-
     ful for comments etc.)
     """
+
     def __init__(self, filename, verbose=True):
         """
         * :param filename: name of file to read
@@ -53,11 +58,11 @@ class Settings:
         a dictionary.
         """
         vals = {}
-        with open(self.file, 'r') as f:
+        with open(self.file, "r") as f:
             for line in f:
                 words = line.split()
                 if len(words) > 0:
-                    if words[0] != '*':
+                    if words[0] != "*":
                         vals[words[0]] = words[1]
         return vals
 

@@ -1,6 +1,7 @@
 import os
 from Log import info
 
+
 def CheckDir(path):
     """
     Check if a directory already exists.

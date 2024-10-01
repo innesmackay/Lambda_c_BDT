@@ -1,0 +1,5 @@
+*.ipynb_checkpoints
+*.save
+*__pycache__
+*.root
+logs

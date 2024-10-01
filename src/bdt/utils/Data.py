@@ -13,12 +13,11 @@ from Log import *
 
 
 def LoadCachedData(columns, cut=None, verbose=False):
-    """
-    Loads cached data stored in a ".root" file into
-    a pandas dataframe.
+    """Load data cached in a local directory.
     :param columns: columns to read.
     :param cut: query string to apply.
-    :param verbose: verbosity boolean
+    :param verbose: verbosity boolean.
+    :returns: data in a pandas dataframe
     """
     if verbose:
         info("Loading in cahced data sample and applying {} cut".format(cut))
@@ -30,12 +29,11 @@ def LoadCachedData(columns, cut=None, verbose=False):
 
 
 def LoadMC(columns, cut=None, verbose=False):
-    """
-    Loads signal MC stored in a ".root" file into
-    a pandas dataframe.
+    """Load signal MC from a local directory.
     :param columns: columns to read.
     :param cut: query string to apply.
-    :param verbose: verbosity boolean
+    :param verbose: verbosity boolean.
+    :returns: MC in a pandas dataframe.
     """
     if verbose:
         info("Loading in MC sample and applying {} cut".format(cut))
@@ -45,12 +43,11 @@ def LoadMC(columns, cut=None, verbose=False):
 
 
 def LoadNFiles(columns, n=2, cut=None, verbose=False):
-    """
-    Load first N data files from the CERN server into a
-    pandas dataframe.
+    """Load the first N data files from the CERN server.
     :param columns: columns to read.
     :param cut: query string to apply.
-    :param verbose: verbosity boolean
+    :param verbose: verbosity boolean.
+    :returns: data in a pandas dataframe.
     """
     if verbose:
         info("Loading in {} files from eos and applying {} cut".format(n, cut))
@@ -68,12 +65,11 @@ def LoadNFiles(columns, n=2, cut=None, verbose=False):
 
 
 def LoadFileN(columns, n, cut=None):
-    """
-    Load the Nth data files from the CERN server into a
-    pandas dataframe.
+    """Load the Nth data file from the CERN server
     :param columns: columns to read.
     :param n: index of file to load.
     :param cut: query string to apply.
+    :returns: data in a pandas dataframe.
     """
     files = [
         f"root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/PID_TURBOONLY_TUPLE.ROOT/00232503/0000/00232503_{i:08}_1.pid_turboonly_tuple.root"

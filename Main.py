@@ -88,7 +88,8 @@ training = TestAndTrain(config, training_sample, transformed_training_cols)
 if args.grid:
     training.GridSearch()
 else:
-    training.Train(config.GetI("max_depth"), config.GetI("n_estimators"), config.GetF("learning_rate"))
+    train_params = {"max_depth": config.GetI("max_depth"), "n_estimators": config.GetI("n_estimators"), "learning_rate": config.GetF("learning_rate")}
+    training.Train(train_params)
 success("Training done!")
 
 # ==============================

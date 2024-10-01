@@ -39,7 +39,7 @@ class TestAndTrain:
         self.summary = open(summary_path, "w")
 
 
-    def Train(self, depth, n_est, lr, weight=True):
+    def Train(self, params, weight=True):
         """
         Function to train the ML algorithm
         :param depth: depth of the trees
@@ -63,7 +63,7 @@ class TestAndTrain:
                 ("transformer", TransformTheColumns(new_variables=self.train_vars, verbose=False)),
                 ("imputer", SimpleImputer(strategy="median")), # Replace NaN with median
                 ("scaler", StandardScaler()),
-                ("classifier", GradientBoostingClassifier(max_depth=depth, n_estimators=n_est, learning_rate=lr)),
+                ("classifier", GradientBoostingClassifier(learning_rate=params["learning_rate"], max_depth=params["max_depth"], n_estimators=params["n_estimators"])),
             ]
         )
         ml_alg.fit(data_train, target_train, **{"classifier__sample_weight":weights})
@@ -96,6 +96,7 @@ class TestAndTrain:
         self.summary.write("n11 {}\n".format(confusion[1][1]))
 
         return
+
 
     def ResponsePlot(self, data_train, data_test, target_train, target_test, weights=None):
 
@@ -234,10 +235,9 @@ class TestAndTrain:
         Run a grid scan on the BDT hyperparameters
         """
         data_train, data_test, target_train, target_test = train_test_split(self.train, self.target, test_size=0.75, random_state=16)
-
         weights = compute_sample_weight(class_weight="balanced", y=target_train)
 
-        params = {'n_estimators': [2, 5, 10, 15, 20, 30, 50, 75, 100, 150], 'learning_rate': [0.05, 0.1, 0.2, 0.5, 1.0, 2.], 'max_depth': [2, 3, 4, 5, 6, 7, 8]}
+        params = {'n_estimators': [2, 5, 10, 20, 50], 'learning_rate': [0.05, 0.1, 0.2, 0.5], 'max_depth': [2, 3, 4]}
         ml_alg = Pipeline(
             [
                 ("transformer", TransformTheColumns(new_variables=self.train_vars, verbose=False)),
@@ -252,14 +252,16 @@ class TestAndTrain:
             ]
         )
         ml_alg.fit(data_train, target_train, **{"grid_search__sample_weight":weights})
-        self.alg = ml_alg.best_estimator_
-        if self.verbose:
-            success("Best score: {}".format(ml_alg.named_steps["grid_search"].best_score_))
-            success("Best parameters: {}".format(ml_alg.named_steps["grid_search"].best_params_))
-            info("All results:")
-            print(ml_alg.named_steps["grid_search"].cv_results_) # Write to json?
+        success("Grid search complete\nBest score: {}".format(ml_alg.named_steps["grid_search"].best_score_))
+        success("Best parameters: {}".format(ml_alg.named_steps["grid_search"].best_params_))
+        info("All results:")
+        print(ml_alg.named_steps["grid_search"].cv_results_)
+
+        # Train with best parameters
+        self.Train(ml_alg.named_steps["grid_search"].best_params_)
 
         return
+
 
     def PersistModel(self):
         """

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>utils &#8212; Lambda_c_BDT v1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=e160b93e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="utils">
+<h1>utils<a class="headerlink" href="#utils" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Data module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Data.html#Data.LoadCachedData"><code class="docutils literal notranslate"><span class="pre">LoadCachedData()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data.html#Data.LoadFileN"><code class="docutils literal notranslate"><span class="pre">LoadFileN()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data.html#Data.LoadMC"><code class="docutils literal notranslate"><span class="pre">LoadMC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Data.html#Data.LoadNFiles"><code class="docutils literal notranslate"><span class="pre">LoadNFiles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Log.html">Log module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.debug"><code class="docutils literal notranslate"><span class="pre">debug()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.error"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.general"><code class="docutils literal notranslate"><span class="pre">general()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.info"><code class="docutils literal notranslate"><span class="pre">info()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.success"><code class="docutils literal notranslate"><span class="pre">success()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Log.html#Log.warning"><code class="docutils literal notranslate"><span class="pre">warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Preprocess.html">Preprocess module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Preprocess.html#Preprocess.TransformTheColumns"><code class="docutils literal notranslate"><span class="pre">TransformTheColumns</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Preprocess.html#Preprocess.TransformTheColumns.fit"><code class="docutils literal notranslate"><span class="pre">TransformTheColumns.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Preprocess.html#Preprocess.TransformTheColumns.parse_transformation"><code class="docutils literal notranslate"><span class="pre">TransformTheColumns.parse_transformation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Preprocess.html#Preprocess.TransformTheColumns.transform"><code class="docutils literal notranslate"><span class="pre">TransformTheColumns.transform()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TestAndTrain.html">TestAndTrain module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain"><code class="docutils literal notranslate"><span class="pre">TestAndTrain</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.Apply"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.Apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.BinaryKFoldValidation"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.BinaryKFoldValidation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.Close"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.Close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.CompareVariables"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.CompareVariables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.GridSearch"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.GridSearch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.Importance"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.Importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.MakeCorrelationMatrix"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.MakeCorrelationMatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.MakeROC"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.MakeROC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.PersistModel"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.PersistModel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.ResponsePlot"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.ResponsePlot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestAndTrain.html#TestAndTrain.TestAndTrain.Train"><code class="docutils literal notranslate"><span class="pre">TestAndTrain.Train()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TextFileHandling.html">TextFileHandling module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.ParseCut"><code class="docutils literal notranslate"><span class="pre">ParseCut()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.ReadList"><code class="docutils literal notranslate"><span class="pre">ReadList()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings"><code class="docutils literal notranslate"><span class="pre">Settings</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings.GetF"><code class="docutils literal notranslate"><span class="pre">Settings.GetF()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings.GetI"><code class="docutils literal notranslate"><span class="pre">Settings.GetI()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings.GetKeys"><code class="docutils literal notranslate"><span class="pre">Settings.GetKeys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings.GetS"><code class="docutils literal notranslate"><span class="pre">Settings.GetS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="TextFileHandling.html#TextFileHandling.Settings.ReadSettings"><code class="docutils literal notranslate"><span class="pre">Settings.ReadSettings()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Utilities.html">Utilities module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Utilities.html#Utilities.CheckDir"><code class="docutils literal notranslate"><span class="pre">CheckDir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Lambda_c_BDT</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Data module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Innes Mackay.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/modules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

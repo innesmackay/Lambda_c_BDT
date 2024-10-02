@@ -1,0 +1,12 @@
+sphinx_rtd_theme
+sphinx
+numpy=1.23.5
+root=6.24.6
+uproot=4.3.7
+pandas=2.0.0
+root_pandas=0.7.0
+python=3.10.8
+matplotlib=3.6.2
+scipy=1.10.0
+scikit-learn=1.2.2
+seaborn=0.12.2

@@ -1,7 +1,6 @@
 sphinx_rtd_theme
 sphinx
 numpy==1.23.5
-root==6.24.6
 uproot==4.3.7
 pandas==2.0.0
 root_pandas==0.7.0

@@ -73,10 +73,22 @@ def LoadFileN(columns, n, cut=None):
     """
     files = [
         f"root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/PID_TURBOONLY_TUPLE.ROOT/00232503/0000/00232503_{i:08}_1.pid_turboonly_tuple.root"
-        for i in range(1, 500)
+        for i in range(1, 147)
     ]
 
     data_root = uproot.open("{}:LcToPKPi/DecayTree".format(files[n]))
     data = data_root.arrays(columns, cut=cut, library="pd")
 
+    return data
+
+
+def LoadFile(path, columns, cut=None):
+    """Load data from a particular file
+    :param path: path to file.
+    :param columns: columns to read.
+    :param cut: query string to apply.
+    :returns: data in pandas dataframe.
+    """
+    data_root = uproot.open(path)
+    data = data_root.arrays(columns, cut=cut, library="pd")
     return data

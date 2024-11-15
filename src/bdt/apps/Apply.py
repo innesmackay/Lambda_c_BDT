@@ -1,6 +1,6 @@
 import pandas as pd
 from TextFileHandling import Settings, ReadList, ParseCut
-from Data import LoadFileN
+from Data import LoadFileN, LoadFile
 import argparse
 from root_pandas import to_root
 from Log import *
@@ -43,6 +43,13 @@ parser.add_argument(
     help="Combine the files",
 )
 parser.add_argument(
+    "--file_to_apply",
+    type=str,
+    required=False,
+    default=None,
+    help="Apply the bdt to a single file",
+)
+parser.add_argument(
     "--verbose",
     type=bool,
     required=False,
@@ -78,13 +85,10 @@ with open(args.model, "rb") as f:
 # ==============================
 # Apply to data
 # ==============================
-combined_df = pd.DataFrame()
-for i in range(args.nfiles):
-
-    if verbose:
-        info("Getting BDT scores for file {}".format(i))
-
-    all_data = LoadFileN(all_data_cols, n=i, cut=ParseCut(config.GetS("data_cut")))
+if args.file_to_apply is not None:
+    all_data = LoadFile(
+        args.file_to_apply, all_data_cols, cut=ParseCut(config.GetS("data_cut"))
+    )
     data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
 
     data_probs = alg.predict_proba(data)
@@ -94,17 +98,44 @@ for i in range(args.nfiles):
         error(
             "There is not a 1:1 correspondence between the data and the transformed data"
         )
-        break
     else:
-        data["signal_score"] = bdt_scores
+        data[config.GetS("bdt_branch_name")] = bdt_scores
+
+    full_outfile = args.file_to_apply.replace(
+        ".root", "_{}.root".format(config.GetS("bdt_branch_name"))
+    )
+    outfile = full_outfile.split(":")[0]  # Remove branch name
+    tree_name = full_outfile.split(":")[1]
+    data.to_root(outfile, key=tree_name)
+
+else:
+    combined_df = pd.DataFrame()
+    for i in range(args.nfiles):
+
+        if verbose:
+            info("Getting BDT scores for file {}".format(i))
+
+        all_data = LoadFileN(all_data_cols, n=i, cut=ParseCut(config.GetS("data_cut")))
+        data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
+
+        data_probs = alg.predict_proba(data)
+        bdt_scores = data_probs[:, 1]
+
+        if len(data) != len(bdt_scores):
+            error(
+                "There is not a 1:1 correspondence between the data and the transformed data"
+            )
+            break
+        else:
+            data["signal_score"] = bdt_scores
+
+        if args.combine:
+            combined_df = pd.concat([data, combined_df])
+            info("Combined length: {}".format(len(combined_df)))
+        else:
+            outfile = f"{outdir}/file_{str(i)}.root"
+            data.to_root(outfile, key="tree")
 
     if args.combine:
-        combined_df = pd.concat([data, combined_df])
-        info("Combined length: {}".format(len(combined_df)))
-    else:
-        outfile = f"{outdir}/file_{str(i)}.root"
-        data.to_root(outfile, key="tree")
-
-if args.combine:
-    outfile = f"{outdir}/data_with_bdt.root"
-    combined_df.to_root(outfile, key="tree")
+        outfile = f"{outdir}/data_with_bdt.root"
+        combined_df.to_root(outfile, key="tree")

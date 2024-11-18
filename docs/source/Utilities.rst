@@ -1,5 +1,7 @@
 Utilities module
-================
+=================
+
+General utilities module.
 
 .. automodule:: Utilities
    :members:

@@ -5,21 +5,9 @@ from logzero import logger as log
 
 
 class TransformTheColumns(BaseEstimator, TransformerMixin):
-    """
-    Class for transforming the columns in data. Included in
-    a scikit-learn pipeline. Used for combining raw variables.
-    General idea:
-       1. Supply list of new variables names (which are defined
-          in ```self.definitions```
-       2. Parse the definition using ```parse_transformation```
-          which returns some variables, and a string
-          identifying how they should be combined.
-       3. Make a new dataframe with transformed variables
-          in ```transform```
-    """
-
     def __init__(self, new_variables, verbose=True, dropna=False):
-        """
+        """Initialise the class.
+
         :param new_variables: list of transformed variable names
         :param verbose: verbosity boolean
         :param dropna: should rows with NaN be dropped from df?
@@ -53,26 +41,20 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
         }
 
     def fit(self, X, y=None):
-        """
-        Necessary function for scikit-learn pipeline.
-        """
+        """Necessary function for scikit-learn pipeline."""
         return self
 
     def parse_transformation(self, definition):
-        """
-        Classifier training variables are created
-        from combinations of "raw" variables to
+        """Classifier training variables are created
+        from combinations of raw variables to
         reduce the number of dimensions. The
         combinations are defined in
-        ```self.definitions```. This function
+        `self.definitions`. This function
         parses the string definition such that the
         dataframe can be manipulated.
 
-        :param definition: string definition of combined
-        variable
-        :returns toCombine: variables to combine
-        :returns transType: key to how they will be
-        combined
+        :param definition: string definition of combined variable.
+        :return: list of variables to combine and the key to how they will be combined.
         """
         transType = None
         if "+" in definition:  # e.g. X+Y+Z
@@ -118,12 +100,12 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
         return toCombine, transType
 
     def transform(self, X):
-        """
-        Transform the dataframe to reduce the number of
+        """Transform the dataframe to reduce the number of
         dimensions in the training variables by combining them
         to form new variables.
+
         :param X: pandas dataframe with raw variables
-        :returns new_df: pandas dataframe with transformed variables
+        :return: pandas dataframe with transformed variables
         """
         new_df = pd.DataFrame()
         for col in self.new_variables:

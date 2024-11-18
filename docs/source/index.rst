@@ -6,14 +6,15 @@
 Lambda_c_BDT documentation
 ==========================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+The python code outlined here has two main functions, with an application for each.
+
+  1. Training a BDT using `Train.py`
+  2. Applying a persisted BDT to a dataset using `Apply.py`
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   modules
    apps
+   modules

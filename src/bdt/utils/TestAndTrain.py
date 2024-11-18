@@ -17,7 +17,7 @@ from sklearn.utils.class_weight import compute_sample_weight
 from Utilities import CheckDir
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.pipeline import Pipeline, FunctionTransformer, FeatureUnion
-from Log import info, success, debug, warning
+from logzero import logger as log
 from pickle import dump
 from sklearn.impute import SimpleImputer
 
@@ -26,7 +26,7 @@ class TestAndTrain:
 
     def __init__(self, config, dataset, training_variables, verbose=False):
         """
-        :param config: Settings class
+        :param config: loaded yaml file
         :param dataset: training dataset
         :param training_variables: list of transformed variables used in training
         """
@@ -42,7 +42,7 @@ class TestAndTrain:
         )
         self.transformed_df = tfr.transform(self.dataset)
 
-        self.output_folder = config.GetS("output_folder")
+        self.output_folder = config["output_folder"]
         CheckDir("output/{}".format(self.output_folder))
 
         summary_path = "output/{}/training_summary.txt".format(self.output_folder)
@@ -66,7 +66,7 @@ class TestAndTrain:
         weights = None
         if weight:
             weights = compute_sample_weight(class_weight="balanced", y=target_train)
-            info("Background and signal weights are {}".format(np.unique(weights)))
+            log.info("Background and signal weights are {}".format(np.unique(weights)))
 
         # Scale the variables and run training
         ml_alg = Pipeline(
@@ -374,15 +374,15 @@ class TestAndTrain:
             ]
         )
         ml_alg.fit(data_train, target_train, **{"grid_search__sample_weight": weights})
-        success(
+        log.info(
             "Grid search complete\nBest score: {}".format(
                 ml_alg.named_steps["grid_search"].best_score_
             )
         )
-        success(
+        log.info(
             "Best parameters: {}".format(ml_alg.named_steps["grid_search"].best_params_)
         )
-        info("All results:")
+        log.info("All results:")
         print(ml_alg.named_steps["grid_search"].cv_results_)
 
         # Train with best parameters
@@ -394,10 +394,10 @@ class TestAndTrain:
         """
         Persist (save) the model to a pickle file.
         """
-        warning(
+        log.warn(
             "Reminder: be careful when applying this with different versions of scikit-learn!"
         )
-        with open(self.config.GetS("model_file"), "wb") as f:
+        with open(self.config["model_file"], "wb") as f:
             dump(self.alg, f, protocol=5)
         return
 

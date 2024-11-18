@@ -1,5 +1,5 @@
 import os
-from Log import info
+from logzero import logger as log
 
 
 def CheckDir(path):
@@ -9,8 +9,22 @@ def CheckDir(path):
     :param path: path to check
     """
     if os.path.exists(path):
-        info("{} directory already exists".format(path))
+        log.info("{} directory already exists".format(path))
     else:
-        info("Making directory {}".format(path))
+        log.info("Making directory {}".format(path))
         os.makedirs(path)
     return
+
+
+def ParseCut(cut_string):
+    """
+    Parses cut read in from a settings file (which can't
+    have spaces).
+    :param cut_string: string of requirement to be parsed
+    """
+    cut = cut_string
+    if "&" in cut:
+        cut = cut.replace("&", " & ")
+    if "|" in cut:
+        cut = cut.replace("|", " | ")
+    return cut

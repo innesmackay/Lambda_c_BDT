@@ -1,13 +1,14 @@
 from TestAndTrain import TestAndTrain
-from TextFileHandling import Settings, ReadList, ParseCut
+from Utilities import ParseCut
 from Data import *
 import numpy as np
 import pandas as pd
+import yaml
 
 pd.set_option("mode.chained_assignment", None)  # Suppress warning
 import argparse
 from root_pandas import to_root
-from Log import *
+from logzero import logger as log
 
 # ==============================
 # Read in the input arguments
@@ -48,29 +49,28 @@ parser.add_argument(
 )
 args = parser.parse_args()
 verbose = args.verbose
-config = Settings(args.config)
+with open(args.config) as f:
+    config = yaml.safe_load(f)
 
 # Read in different necessary variables
-transformed_training_cols = ReadList(
-    "configs/training/{}.txt".format(config.GetS("training"))
-)
-raw_training_cols = ReadList("configs/training/{}.txt".format(config.GetS("reqd_vars")))
-data_cols = ReadList("configs/other_variables/{}.txt".format(config.GetS("data_vars")))
-mc_cols = ReadList("configs/other_variables/{}.txt".format(config.GetS("mc_vars")))
+transformed_training_cols = config["training"]
+raw_training_cols = config["reqd_vars"]
+data_cols = config["data_vars"]
+mc_cols = config["mc_vars"]
 all_data_cols = data_cols + raw_training_cols
 all_mc_cols = mc_cols + data_cols + raw_training_cols
 if verbose:
-    info(
+    log.info(
         "Raw variables needed for training:\n{}\n".format(
             "\n".join(str(var) for var in raw_training_cols)
         )
     )
-    info(
+    log.info(
         "Additional data variables to be kept:\n{}\n".format(
             "\n".join(str(var) for var in data_cols)
         )
     )
-    info(
+    log.info(
         "Additional mc variables to be kept:\n{}\n".format(
             "\n".join(str(var) for var in mc_cols)
         )
@@ -80,14 +80,14 @@ if verbose:
 # ==============================
 # Load in the data and MC
 # ==============================
-mc = LoadMC(all_mc_cols, cut=ParseCut(config.GetS("mc_cut")), verbose=verbose)
+mc = LoadMC(all_mc_cols, cut=ParseCut(config["mc_cut"]), verbose=verbose)
 all_data = LoadNFiles(
-    all_data_cols, n=args.nfiles, cut=ParseCut(config.GetS("data_cut")), verbose=verbose
+    all_data_cols, n=args.nfiles, cut=ParseCut(config["data_cut"]), verbose=verbose
 )
 
 # Apply cuts
-sideband = all_data.query(ParseCut(config.GetS("sideband_cut")))
-data = all_data.query("not ({})".format(ParseCut(config.GetS("sideband_cut"))))
+sideband = all_data.query(ParseCut(config["sideband_cut"]))
+data = all_data.query("not ({})".format(ParseCut(config["sideband_cut"])))
 
 
 # ==============================
@@ -110,12 +110,12 @@ if args.grid:
     training.GridSearch()
 else:
     train_params = {
-        "max_depth": config.GetI("max_depth"),
-        "n_estimators": config.GetI("n_estimators"),
-        "learning_rate": config.GetF("learning_rate"),
+        "max_depth": int(config["max_depth"]),
+        "n_estimators": int(config["n_estimators"]),
+        "learning_rate": float(config["learning_rate"]),
     }
     training.Train(train_params)
-success("Training done!")
+log.info("Training done!")
 
 # ==============================
 # Look at metrics
@@ -134,10 +134,10 @@ if args.apply:
     bdt_scores = training.Apply(data)
     data["signal_score"] = bdt_scores
     if len(data) != len(bdt_scores):
-        warning(
+        log.warn(
             "There is not a 1:1 correspondence between the data and the transformed data"
         )
     if verbose:
-        info("Writing data to {}".format(config.GetS("test_outfile")))
-    data.to_root(config.GetS("test_outfile"), key="tree")
+        log.info("Writing data to {}".format(config["test_outfile"]))
+    data.to_root(config["test_outfile"], key="tree")
 training.Close()

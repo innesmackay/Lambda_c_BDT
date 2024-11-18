@@ -1,0 +1,23 @@
+# Necessary variables
+training: [Lc_CHI2, log_p_MINIPCHI2, log_Lc_BPVFDCHI2, lgnm_Lc_BPVDIRA, asym_K_pi_MINIPCHI2] # List of training variables
+reqd_vars: [Lc_BPVDIRA, p_MINIPCHI2, pi_MINIPCHI2, K_MINIPCHI2, Lc_CHI2, Lc_BPVFDCHI2] # List of raw variable names
+data_vars: [Lc_M, p_PID_P, p_P, p_ETA, nPVs] # Spectator variables
+mc_vars: [Lc_BKGCAT] # Variables required for MC selection
+
+# Selections
+sideband_cut: ((Lc_M>2345)|(Lc_M<2225))
+data_cut: (p_PID_P>-50)
+mc_cut: ((Lc_BKGCAT<15)&(p_PID_P>-50))
+
+# Training config
+max_depth: 3
+n_estimators: 5
+learning_rate: 0.2
+
+# Output
+output_folder: test_yaml
+test_outfile: test_test_yaml.root
+model_file: output/test_yaml/model.pkl
+
+# Other
+bdt_branch_name: test_yaml_score

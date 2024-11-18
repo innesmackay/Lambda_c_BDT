@@ -1,7 +1,7 @@
-from Log import *
 from sklearn.base import BaseEstimator, TransformerMixin
 import pandas as pd
 import numpy as np
+from logzero import logger as log
 
 
 class TransformTheColumns(BaseEstimator, TransformerMixin):
@@ -103,13 +103,13 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
             toCombine = strippedDef.split(",")
             transType = "lognorm"
         else:
-            error("Couldn't parse definition")
+            log.error("Couldn't parse definition")
 
         if self.verbose:
             toPrint = " ".join(str(var) for var in toCombine)
             if isinstance(toCombine, str):
                 toPrint = str(toCombine)
-            info(
+            log.info(
                 "Parsing {} using type {} and variables {}".format(
                     definition, transType, toPrint
                 )
@@ -153,7 +153,7 @@ class TransformTheColumns(BaseEstimator, TransformerMixin):
                     )
             else:
                 if self.verbose:
-                    info("No definition for {}, using raw variable".format(col))
+                    log.info("No definition for {}, using raw variable".format(col))
                 new_df[col] = X[col]
 
         return new_df.dropna() if self.dropna else new_df

@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $BASE
 
-python -m Train --config configs/no_dira.txt --nfiles 5 --verbose True --apply True
+snakemake -R --until train -j 1 -s train_and_apply.snake --configfile configs/${1}.yaml
 
 cd -
 

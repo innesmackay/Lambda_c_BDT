@@ -1,0 +1,24 @@
+training no_pion_p
+reqd_vars all
+data_vars data
+mc_vars mc
+
+sideband_cut ((Lc_M>2345)|(Lc_M<2225))
+data_cut (p_PID_P>-50)
+mc_cut ((Lc_BKGCAT<15)&(p_PID_P>-50))
+
+output_folder no_pion_p
+
+* max_depth 2
+* n_estimators 5
+* learning_rate 0.1
+
+max_depth 3
+n_estimators 20
+learning_rate 0.2
+
+test_outfile test_no_pion_p.root
+
+model_file output/no_pion_p/model.pkl
+
+bdt_branch_name no_pion_p_score

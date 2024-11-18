@@ -1,7 +1,9 @@
 #!/bin/bash
+cd $BASE
 yaml_file=${1}
 rule=${2}
 snakefile=train_and_apply.snake
+
 
 # Which rules to run
 if [ "$rule" = "all" ];
@@ -20,5 +22,3 @@ elif [ "$rule" = "apply" ];
   fi
 
 cd -
-
-

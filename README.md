@@ -1,5 +1,13 @@
 # $\Lambda_c^+$ BDT
-Coding framework designed to train and apply a BDT using the `scikit-learn` and `pandas` packages.
+At the LHCb experiment at CERN a huge amount of data is collected during every collision. Much of
+this is background, which we are not particularly interested in. We could remove this with some
+rectangular requirements, but a more effective method is to train a BDT to distinguish between signal
+and background. In this case, our signal is from a $\Lambda_c^+$ particle. The BDT is trained using various 
+kinematic properties which discriminate between signal, represented by a simulation sample, and background, 
+represented by a selection of data with no signal.
+
+This coding framework is designed to train and apply a BDT using the `scikit-learn` and `pandas` packages.
+
 
 ## Code organisation
 To get started run ```conda env create -f env.yml``` which creates a conda environment with all the required packages.

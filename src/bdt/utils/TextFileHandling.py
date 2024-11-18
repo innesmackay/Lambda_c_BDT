@@ -34,7 +34,7 @@ class Settings:
     Class for reading inputs from a text file.
     In the text file the inputs are stored file line-
     by-line with the format:
-        KEY VALUE
+        KEY : VALUE
     The inputs are stored in a dictionary to be
     accessed. If the line in the text file begins
     with a '*' character it will not be read (use-

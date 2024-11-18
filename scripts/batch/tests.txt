@@ -1,9 +1,0 @@
-minmax_ghost_reduced
-minmax_pt_reduced
-minmax_ipchisq_reduced
-minmax_tchisq_reduced
-sum_ghost_reduced
-sum_pt_reduced
-sum_ipchisq_reduced
-sum_tchisq_reduced
-log_dira

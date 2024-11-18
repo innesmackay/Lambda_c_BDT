@@ -13,11 +13,18 @@ mc_cut: ((Lc_BKGCAT<15)&(p_PID_P>-50))
 max_depth: 3
 n_estimators: 5
 learning_rate: 0.2
+grid: false # Run grid scan
+n_train: 2 # Number of files to train on
 
 # Output
 output_folder: test_yaml
 test_outfile: test_test_yaml.root
 model_file: output/test_yaml/model.pkl
+apply: True # Apply training to test sample of data
 
 # Other
 bdt_branch_name: test_yaml_score
+unique_name: test_yaml
+
+# Number of files to apply BDT to
+n_files_apply: 5

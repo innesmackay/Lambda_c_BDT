@@ -1,0 +1,46 @@
+import os
+
+# Set config
+configfile: "configs/test.yaml"
+
+# Access name of configfile in python
+try:
+    name_of_config = str(workflow.overwrite_configfiles[0])
+except:
+    name_of_config = str(workflow.overwrite_configfile[0])
+
+# Set paths
+unique_name = config["unique_name"]
+train_out_path = "{}output/{}/".format(os.environ["BASE"], unique_name)
+applied_data_dir = "/data/lhcb/users/mackay/LcTraining/{}".format(unique_name)
+applied_data_path = "{}/data_with_bdt.root".format(applied_data_dir, unique_name)
+
+# Train then apply
+rule all:
+    input:
+        applied_data_path
+
+# Run the training
+rule train:
+    output:
+        model_file = train_out_path + "model.pkl"
+    params:
+        config = name_of_config
+    shell:
+        """
+        python -m Train --config {params.config} --verbose True
+        """
+
+# Apply to data
+rule apply:
+    input:
+        model_file = train_out_path + "model.pkl"
+    output:
+        output_file = applied_data_path
+    params:
+        config = name_of_config,
+        outdir = applied_data_dir,
+    shell:
+        """
+        python -m Apply --config {params.config} --outdir {params.outdir} --model {input.model_file} --combine True --verbose True
+        """

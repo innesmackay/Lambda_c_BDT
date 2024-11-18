@@ -18,12 +18,6 @@ parser.add_argument(
     help="Path to model file",
 )
 parser.add_argument(
-    "--nfiles",
-    type=int,
-    default=5,
-    help="Number of data files to train on",
-)
-parser.add_argument(
     "--config",
     type=str,
     required=True,
@@ -111,7 +105,7 @@ if args.file_to_apply is not None:
 
 else:
     combined_df = pd.DataFrame()
-    for i in range(args.nfiles):
+    for i in range(config["n_files_apply"]):
 
         if verbose:
             log.info("Getting BDT scores for file {}".format(i))

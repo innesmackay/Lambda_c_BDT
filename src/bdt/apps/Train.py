@@ -21,31 +21,11 @@ parser.add_argument(
     help="Name of config file",
 )
 parser.add_argument(
-    "--apply",
-    type=bool,
-    required=False,
-    default=False,
-    help="Apply the BDT to some data",
-)
-parser.add_argument(
-    "--nfiles",
-    type=int,
-    default=5,
-    help="Number of data files to train on",
-)
-parser.add_argument(
     "--verbose",
     type=bool,
     required=False,
     default=False,
     help="Verbosity boolean",
-)
-parser.add_argument(
-    "--grid",
-    type=bool,
-    required=False,
-    default=False,
-    help="Run a grid scan",
 )
 args = parser.parse_args()
 verbose = args.verbose
@@ -82,7 +62,10 @@ if verbose:
 # ==============================
 mc = LoadMC(all_mc_cols, cut=ParseCut(config["mc_cut"]), verbose=verbose)
 all_data = LoadNFiles(
-    all_data_cols, n=args.nfiles, cut=ParseCut(config["data_cut"]), verbose=verbose
+    all_data_cols,
+    n=config["n_train"],
+    cut=ParseCut(config["data_cut"]),
+    verbose=verbose,
 )
 
 # Apply cuts
@@ -106,7 +89,7 @@ training_sample = pd.concat(
 # Run the ML algorithm
 # ==============================
 training = TestAndTrain(config, training_sample, transformed_training_cols)
-if args.grid:
+if config["grid"]:
     training.GridSearch()
 else:
     train_params = {
@@ -130,7 +113,7 @@ training.PersistModel()
 # ==============================
 # Apply to data
 # ==============================
-if args.apply:
+if config["apply"]:
     bdt_scores = training.Apply(data)
     data["signal_score"] = bdt_scores
     if len(data) != len(bdt_scores):

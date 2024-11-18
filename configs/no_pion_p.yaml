@@ -13,11 +13,18 @@ mc_cut: ((Lc_BKGCAT<15)&(p_PID_P>-50))
 max_depth: 3
 n_estimators: 20
 learning_rate: 0.2
+grid: false # Run grid scan
+n_train: 5 # Number of files to train on
 
 # Output
 output_folder: no_pion_p
 test_outfile: test_no_pion_p.root
 model_file: output/no_pion_p/model.pkl
+apply: True # Apply training to test sample of data
 
 # Other
 bdt_branch_name: no_pion_p_score
+unique_name: no_pion_p
+
+# Number of files to apply BDT to
+n_files_apply: 148

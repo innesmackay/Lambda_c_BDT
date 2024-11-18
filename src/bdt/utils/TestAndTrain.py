@@ -25,7 +25,8 @@ from sklearn.impute import SimpleImputer
 class TestAndTrain:
 
     def __init__(self, config, dataset, training_variables, verbose=False):
-        """
+        """Initialise class.
+
         :param config: loaded yaml file
         :param dataset: training dataset
         :param training_variables: list of transformed variables used in training
@@ -49,11 +50,16 @@ class TestAndTrain:
         self.summary = open(summary_path, "w")
 
     def Train(self, params, weight=True):
-        """
-        Function to train the ML algorithm
-        :param depth: depth of the trees
-        :param n_est: number of estimators for boosting
-        :param lr: BDT learning rate
+        """Train the ML algorithm
+
+        :param params: dictionary containing BDT training parmaeters including:
+
+          1. `n_est` - number of estimators for boosting
+
+          2. `lr` - BDT learning rate
+
+          3. `max_depth` - depth of each tree.
+
         :param weight: weight the signal/bkg contributions
         """
 
@@ -100,9 +106,8 @@ class TestAndTrain:
         return
 
     def BinaryKFoldValidation(self, nfolds=5):
-        """
-        Run K-fold validation.
-        Writes recall, precision and f1 scores to the summary file.
+        """Run K-fold validation.
+        Writes recall, precision and f1 scores to the `self.summary` file.
         Classifies each event as binary so not perfect procedure.
         """
         scores = cross_val_predict(self.alg, self.train, self.target, cv=nfolds)
@@ -125,7 +130,17 @@ class TestAndTrain:
     def ResponsePlot(
         self, data_train, data_test, target_train, target_test, weights=None
     ):
+        """Draw histograms comparing the BDT response
+        in the training and testing samples of signal
+        and background. Useful for checking overtraining
+        and BDT generalisation.
 
+        :param data_train: data training sample.
+        :param data_test: data testing sample.
+        :param target_train: target training sample.
+        :param target_test: target testing sample.
+        :param weights: weights for the signal/bkg.
+        """
         train_response = self.alg.predict_proba(data_train)
         data_train["score"] = train_response[:, 1]
         data_train["signal"] = target_train
@@ -209,9 +224,9 @@ class TestAndTrain:
         return
 
     def MakeROC(self, write=True, nfolds=5):
-        """
-        Make the ROC curve.
-        :param write: save the roc curve as a pdf.
+        """Draw the ROC curve.
+        :param write: boolean - save the roc curve.
+        :param nfolds: number of times to fold the test sample.
         """
         probs = cross_val_predict(
             self.alg, self.train, self.target, cv=nfolds, method="predict_proba"
@@ -237,9 +252,7 @@ class TestAndTrain:
         return
 
     def Importance(self):
-        """
-        Write the importance of the training variables to file.
-        """
+        """Write the importance of the training variables to file."""
         importances = self.alg.named_steps["classifier"].feature_importances_
         outfile = open("output/{}/importance.txt".format(self.output_folder), "w")
         for i, imp in enumerate(importances):
@@ -249,9 +262,7 @@ class TestAndTrain:
         return
 
     def CompareVariables(self):
-        """
-        Compare signal/background distributions for the training variables.
-        """
+        """Compare signal/background distributions for the training variables."""
 
         def GetRange(s, b):
             min, max = np.amin(s), np.amax(s)
@@ -296,8 +307,7 @@ class TestAndTrain:
         return
 
     def MakeCorrelationMatrix(self):
-        """
-        Plot a correlation matrix of the training variables in
+        """Plot a correlation matrix of the training variables in
         signal and background.
         """
         samples = {}
@@ -328,17 +338,15 @@ class TestAndTrain:
         return
 
     def Apply(self, input):
-        """
-        Apply the algorithm to data sample and return the signal scores.
+        """Apply the algorithm to data sample and return the BDT scores.
+
         :param input: input data (pandas dataframe) with transformed variables
         """
         data_probs = self.alg.predict_proba(input)
         return data_probs[:, 1]
 
     def GridSearch(self):
-        """
-        Run a grid scan on the BDT hyperparameters
-        """
+        """Run a grid scan on the BDT hyperparameters"""
         data_train, data_test, target_train, target_test = train_test_split(
             self.train, self.target, test_size=0.75, random_state=16
         )
@@ -391,9 +399,7 @@ class TestAndTrain:
         return
 
     def PersistModel(self):
-        """
-        Persist (save) the model to a pickle file.
-        """
+        """Persist (save) the model to a pickle file."""
         log.warn(
             "Reminder: be careful when applying this with different versions of scikit-learn!"
         )
@@ -402,8 +408,6 @@ class TestAndTrain:
         return
 
     def Close(self, persist=True):
-        """
-        Close the output file
-        """
+        """Close the summary file"""
         self.summary.close()
         return

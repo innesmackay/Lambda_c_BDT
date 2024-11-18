@@ -1,5 +1,5 @@
-utils
-=====
+Applications
+============
 
 .. toctree::
    :maxdepth: 4

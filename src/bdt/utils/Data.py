@@ -22,7 +22,8 @@ def LoadCachedData(columns, cut=None, verbose=False):
     if verbose:
         info("Loading in cahced data sample and applying {} cut".format(cut))
     data_root = uproot.open(
-        "{}/MagDown_2024_WithUT/data.root:DecayTree".format(os.environ["DATA_PATH"])
+        "{}/MagDown_2024_WithUT/data.root:DecayTree".format(os.environ["DATA_PATH"]),
+        **{"timeout": 120},
     )
     data = data_root.arrays(columns, cut=cut, library="pd")
     return data
@@ -37,7 +38,10 @@ def LoadMC(columns, cut=None, verbose=False):
     """
     if verbose:
         info("Loading in MC sample and applying {} cut".format(cut))
-    mc_root = uproot.open("{}/mc.root:LcToPKPi/DecayTree".format(os.environ["MC_PATH"]))
+    mc_root = uproot.open(
+        "{}/mc.root:LcToPKPi/DecayTree".format(os.environ["MC_PATH"]),
+        **{"timeout": 120},
+    )
     mc = mc_root.arrays(columns, cut=cut, library="pd")
     return mc
 
@@ -76,7 +80,9 @@ def LoadFileN(columns, n, cut=None):
         for i in range(1, 149)
     ]
 
-    data_root = uproot.open("{}:LcToPKPi/DecayTree".format(files[n]))
+    data_root = uproot.open(
+        "{}:LcToPKPi/DecayTree".format(files[n]), **{"timeout": 120}
+    )
     data = data_root.arrays(columns, cut=cut, library="pd")
 
     return data
@@ -89,6 +95,6 @@ def LoadFile(path, columns, cut=None):
     :param cut: query string to apply.
     :returns: data in pandas dataframe.
     """
-    data_root = uproot.open(path)
+    data_root = uproot.open(path, **{"timeout": 120})
     data = data_root.arrays(columns, cut=cut, library="pd")
     return data
